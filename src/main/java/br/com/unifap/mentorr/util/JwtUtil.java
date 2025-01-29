@@ -13,14 +13,14 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final Key SECRET_KEY = Keys.hmacShaKeyFor("lembrar_de_exportar_para_variavel_de_ambiente".getBytes());
+    private final Key SECRET_KEY = Keys.hmacShaKeyFor("CRIAR_CHAVE_EM_VARIAVEL_DE_AMBIENTE".getBytes());
 
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .claim("roles", userDetails.getAuthorities().toString())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 6000))//QUERO SETAR PARA EXPIRAR COM 1 MINUTO.
+                .setExpiration(new Date(System.currentTimeMillis() + 600000))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }

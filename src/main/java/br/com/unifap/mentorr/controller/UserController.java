@@ -1,6 +1,7 @@
 package br.com.unifap.mentorr.controller;
 
 import br.com.unifap.mentorr.dto.MentorListDto;
+import br.com.unifap.mentorr.dto.MentorProfileDto;
 import br.com.unifap.mentorr.dto.UserCreateRequest;
 import br.com.unifap.mentorr.dto.UserDto;
 import br.com.unifap.mentorr.service.UserService;
@@ -8,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,5 +42,10 @@ public class UserController {
     @GetMapping("/mentor")
     public ResponseEntity<List<MentorListDto>> listMentor() throws IOException {
         return ResponseEntity.ok(userService.listAllMentors());
+    }
+
+    @GetMapping("/mentor/{id}")
+    public ResponseEntity<MentorProfileDto> getMentor(@PathVariable Long id) throws IOException {
+        return ResponseEntity.ok(userService.getMentorProfile(id));
     }
 }

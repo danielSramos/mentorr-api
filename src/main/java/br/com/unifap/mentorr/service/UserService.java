@@ -1,15 +1,16 @@
 package br.com.unifap.mentorr.service;
 
 import br.com.unifap.mentorr.dto.MentorListDto;
+import br.com.unifap.mentorr.dto.MentorProfileDto;
 import br.com.unifap.mentorr.dto.UserCreateRequest;
 import br.com.unifap.mentorr.dto.UserDto;
 import br.com.unifap.mentorr.entity.Nationality;
 import br.com.unifap.mentorr.entity.Role;
 import br.com.unifap.mentorr.entity.User;
+import br.com.unifap.mentorr.exception.ResourceNotFoundException;
 import br.com.unifap.mentorr.mapper.UserMapper;
 import br.com.unifap.mentorr.repository.UserRepository;
 import br.com.unifap.mentorr.util.ImageConverterService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,4 +98,17 @@ public class UserService {
         return mentorList;
     }
 
+    @Transactional
+    public MentorProfileDto getMentorProfile(Long id) throws IOException {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Mentor not found"));
+        MentorProfileDto mentorProfile = UserMapper.INSTANCE.userToMentorProfileDto(user);
+        byte[] profileImageBytes = user.getProfileImage();
+
+        if (profileImageBytes != null) {
+            String base64Image = Base64.getEncoder().encodeToString(profileImageBytes);
+            mentorProfile.setProfileImageBase64(base64Image);
+        }
+
+        return mentorProfile;
+    }
 }
